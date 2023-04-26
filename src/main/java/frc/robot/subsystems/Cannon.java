@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -19,7 +21,7 @@ public class Cannon extends SubsystemBase{
 
     public void Open(){
         m_activator.set(Value.kReverse);
-        
+
     }
     public void Close(){
         m_activator.set(Value.kForward);

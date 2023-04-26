@@ -6,12 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.CannonConstants;
 import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Shoot;
 import frc.robot.libraries.CommandGamepadX;
 import frc.robot.subsystems.Cannon;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -24,12 +24,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 private final Drive m_Drive = new Drive();
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
   
   private final CommandGamepadX m_driverController = new CommandGamepadX(0);
   private final Cannon m_cannon = new Cannon();
+  private final Shoot m_Shoot = new Shoot(m_cannon);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   
   public RobotContainer() {
@@ -51,8 +51,8 @@ private final Drive m_Drive = new Drive();
   private void configureButtonBindings() {
     m_driverController
     .LB()
-    .onTrue(Commands.runOnce(() -> m_cannon.Open()))
-    .onFalse(Commands.runOnce(() -> m_cannon.Open()));
+    
+    .onTrue(Commands.runOnce(() -> m_Shoot.withTimeout(CannonConstants.kSHOOT_DURATION)));
   }
 
   /**
@@ -61,7 +61,6 @@ private final Drive m_Drive = new Drive();
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }
