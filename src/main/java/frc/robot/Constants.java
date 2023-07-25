@@ -27,6 +27,7 @@ public final class Constants {
         public static final int kPCM_PORT = 1;
         public static final int kINTAKE_DOWN = 3;
         public static final int kINTAKE_UP = 2;
+        public static final int kCANNON_SHOOT_PORT = 13;
         //the duration the valve is open in seconds
         public static final double kSHOOT_DURATION = 0.2;
         public static final int kLIFTERMOTORPORT = 8;

@@ -64,7 +64,7 @@ public class RobotContainer {
     m_driverController
         .LB()
 
-        .onTrue(Commands.runOnce(() -> m_Shoot.withTimeout(CannonConstants.kSHOOT_DURATION)));
+        .onTrue(Commands.runOnce(() -> m_cannon.Open()));
   }
 
   /**
