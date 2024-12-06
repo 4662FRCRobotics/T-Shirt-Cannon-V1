@@ -7,8 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.CannonConstants;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.Shoot;
+//import frc.robot.commands.ArcadeDrive;
+//import frc.robot.commands.Shoot;
 import frc.robot.libraries.CommandGamepadX;
 import frc.robot.subsystems.Cannon;
 import frc.robot.subsystems.Drive;
@@ -32,7 +32,7 @@ public class RobotContainer {
   private final Lifter m_lifter = new Lifter();
   private final CommandGamepadX m_driverController = new CommandGamepadX(0);
   private final Cannon m_cannon = new Cannon();
-  private final Shoot m_Shoot = new Shoot(m_cannon);
+ // private final Shoot m_Shoot = new Shoot(m_cannon);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -61,11 +61,15 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_driverController
+   /*  m_driverController
         .LB()
 
         .onTrue(Commands.runOnce(() -> m_cannon.Open()));
-  }
+    */
+    m_driverController
+        .button(7)
+        .onTrue(m_cannon.cmdShoot());
+      }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
