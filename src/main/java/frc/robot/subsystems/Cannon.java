@@ -51,6 +51,10 @@ public class Cannon extends SubsystemBase {
         }*/
         m_ShotTankPSI = 250*(m_ShotTankPressure.getVoltage()/5)-25;
         SmartDashboard.putNumber("Shot Tank Pressure", m_ShotTankPSI);
+        SmartDashboard.putNumber("Shot Tank Target Pressure", m_ShotTankPSITarget);
+        SmartDashboard.putBoolean("Is Cannon Loaded", m_IsLoaded);
+        SmartDashboard.putBoolean("Cannon Armed", m_IsArmed);
+
     }
 
     public void Close() {
@@ -93,7 +97,7 @@ public class Cannon extends SubsystemBase {
     public Command armShotTank() {
         return new FunctionalCommand(
             () -> openArmingValve(),
-             null,
+             () -> {},
               (interrupeted) -> closeArmingValve(),
                () -> isCannonArmed(),
                 this)
