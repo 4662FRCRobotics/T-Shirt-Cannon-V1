@@ -14,19 +14,28 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CannonConstants;
 
 /** Add your docs here. */
 public class Cannon extends SubsystemBase {
     private WPI_TalonSRX m_activator;
-    private Timer m_timer = new Timer();
+    private WPI_TalonSRX m_ArmingValve;
+    //private Timer m_timer = new Timer();
     private AnalogInput m_ShotTankPressure;
     private double m_ShotTankPSI;
+    private double m_ShotTankPSITarget;
+    private boolean m_IsArmed;
+    private boolean m_IsLoaded;
 
     public Cannon() {
         m_activator = new WPI_TalonSRX(CannonConstants.kCANNON_SHOOT_PORT);
+        m_ArmingValve = new WPI_TalonSRX(CannonConstants.kCANNON_ARMING_PORT);
         m_ShotTankPressure = new AnalogInput(0);
+        m_ShotTankPSITarget = 25;
+        m_IsArmed = false;
+        m_IsLoaded = false;
     }
 
    /*  public void Open() {
@@ -42,6 +51,10 @@ public class Cannon extends SubsystemBase {
         }*/
         m_ShotTankPSI = 250*(m_ShotTankPressure.getVoltage()/5)-25;
         SmartDashboard.putNumber("Shot Tank Pressure", m_ShotTankPSI);
+        SmartDashboard.putNumber("Shot Tank Target Pressure", m_ShotTankPSITarget);
+        SmartDashboard.putBoolean("Is Cannon Loaded", m_IsLoaded);
+        SmartDashboard.putBoolean("Cannon Armed", m_IsArmed);
+
     }
 
     public void Close() {
@@ -54,11 +67,40 @@ public class Cannon extends SubsystemBase {
 
     private void closeShotValve() {
         m_activator.set(0);
+        m_IsArmed = false;
+        m_IsLoaded = false;
     }
 
 
     public Command cmdShoot() {
         return Commands.race(Commands.waitSeconds(CannonConstants.kSHOOT_DURATION),
-                Commands.startEnd(() -> openShotValve(), () -> closeShotValve(), this));
+                Commands.startEnd(() -> openShotValve(), () -> closeShotValve(), this)) 
+                .unless(() ->!m_IsArmed);
+    }
+
+    private void openArmingValve() {
+        m_ArmingValve.set(1);
+    }
+
+    private boolean isCannonArmed() {
+        if (m_ShotTankPSI >= m_ShotTankPSITarget) 
+        {return true;} else 
+        {return false;}
+    }
+
+    private void closeArmingValve() {
+        m_ArmingValve.set(0);
+        m_IsArmed = true;
+        //set LED lights on the cannon to red//
+    }
+
+    public Command armShotTank() {
+        return new FunctionalCommand(
+            () -> openArmingValve(),
+             () -> {},
+              (interrupeted) -> closeArmingValve(),
+               () -> isCannonArmed(),
+                this)
+                .withTimeout(10);
     }
 }

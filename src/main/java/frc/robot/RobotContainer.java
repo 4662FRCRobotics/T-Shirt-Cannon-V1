@@ -67,8 +67,13 @@ public class RobotContainer {
         .onTrue(Commands.runOnce(() -> m_cannon.Open()));
     */
     m_driverController
-        .button(7)
-        .onTrue(m_cannon.cmdShoot());
+        .button(8)
+        .onTrue(m_cannon.cmdShoot())
+       ;
+
+    m_driverController
+        .button(6)
+        .onTrue(m_cannon.armShotTank());
       }
 
   /**

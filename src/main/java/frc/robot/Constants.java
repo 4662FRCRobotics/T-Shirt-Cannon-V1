@@ -32,5 +32,7 @@ public final class Constants {
         public static final double kSHOOT_DURATION = .05;
         public static final int kLIFTERMOTORPORT = 8;
         public static final double kLIFTERSPEED = 0.25;
+        public static final int kCANNON_ARMING_PORT = 10;
+
     }
 }
