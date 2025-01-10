@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 //import edu.wpi.first.wpilibj.DoubleSolenoid;
 //import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -20,6 +22,35 @@ import frc.robot.Constants.CannonConstants;
 
 /** Add your docs here. */
 public class Cannon extends SubsystemBase {
+
+    private enum LEDColor {
+        LED_GREEN(0,0,255),
+        LED_YELLOW(255,0,255),
+        LED_RED(255,0,0);
+
+        private final int m_LED_RED;
+        private final int m_LED_GREEN;
+        private final int m_LED_BLUE;
+
+        private LEDColor(int red, int blue, int green) {
+            this.m_LED_RED = red;
+            this.m_LED_GREEN = green;
+            this.m_LED_BLUE = blue;
+        }
+
+        private int getRed() {
+            return m_LED_RED;
+        }
+
+        private int getGreen() {
+            return m_LED_GREEN;
+        }
+
+        private int getBlue() {
+            return m_LED_BLUE;
+        }
+    }
+
     private WPI_TalonSRX m_activator;
     private WPI_TalonSRX m_ArmingValve;
     //private Timer m_timer = new Timer();
@@ -28,6 +59,9 @@ public class Cannon extends SubsystemBase {
     private double m_ShotTankPSITarget;
     private boolean m_IsArmed;
     private boolean m_IsLoaded;
+    private final AddressableLED m_cannonLED;
+    private final AddressableLEDBuffer m_cannonLEDBuffer;
+    private LEDColor m_LEDNowColor;
 
     public Cannon() {
         m_activator = new WPI_TalonSRX(CannonConstants.kCANNON_SHOOT_PORT);
@@ -36,6 +70,11 @@ public class Cannon extends SubsystemBase {
         m_ShotTankPSITarget = 25;
         m_IsArmed = false;
         m_IsLoaded = false;
+        m_cannonLED = new AddressableLED(0);
+        m_cannonLEDBuffer = new AddressableLEDBuffer(20);
+        m_cannonLED.setLength(m_cannonLEDBuffer.getLength());
+        m_cannonLED.start();
+        m_LEDNowColor = LEDColor.LED_GREEN;
     }
 
    /*  public void Open() {
@@ -55,6 +94,10 @@ public class Cannon extends SubsystemBase {
         SmartDashboard.putBoolean("Is Cannon Loaded", m_IsLoaded);
         SmartDashboard.putBoolean("Cannon Armed", m_IsArmed);
 
+        for (var ix = 0; ix < m_cannonLEDBuffer.getLength(); ix++) {
+            m_cannonLEDBuffer.setRGB(ix, m_LEDNowColor.getRed(), m_LEDNowColor.getGreen(), m_LEDNowColor.getBlue());
+        }
+        m_cannonLED.setData(m_cannonLEDBuffer);
     }
 
     public void Close() {
@@ -69,6 +112,7 @@ public class Cannon extends SubsystemBase {
         m_activator.set(0);
         m_IsArmed = false;
         m_IsLoaded = false;
+        m_LEDNowColor = LEDColor.LED_GREEN;
     }
 
 
@@ -91,7 +135,16 @@ public class Cannon extends SubsystemBase {
     private void closeArmingValve() {
         m_ArmingValve.set(0);
         m_IsArmed = true;
-        //set LED lights on the cannon to red//
+        m_LEDNowColor = LEDColor.LED_RED;
+    }
+
+    private void setLoaded() {
+        m_IsLoaded = true;
+        m_LEDNowColor = LEDColor.LED_YELLOW;
+    }
+    public Command cmdLoadedness() {
+        return Commands.runOnce(()->setLoaded(), this)
+            .ignoringDisable(true);
     }
 
     public Command armShotTank() {
@@ -101,6 +154,7 @@ public class Cannon extends SubsystemBase {
               (interrupeted) -> closeArmingValve(),
                () -> isCannonArmed(),
                 this)
-                .withTimeout(10);
+                .withTimeout(10)
+                .unless(() -> !m_IsLoaded);
     }
 }
