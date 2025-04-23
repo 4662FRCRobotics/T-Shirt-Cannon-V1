@@ -117,9 +117,13 @@ public class Cannon extends SubsystemBase {
 
 
     public Command cmdShoot() {
-        return Commands.race(Commands.waitSeconds(CannonConstants.kSHOOT_DURATION),
-                Commands.startEnd(() -> openShotValve(), () -> closeShotValve(), this)) 
-                .unless(() ->!m_IsArmed);
+        return Commands.sequence(Commands.race(Commands.waitSeconds(CannonConstants.kSHOOT_DURATION),
+        Commands.run(() -> openShotValve(), this)), 
+        Commands.runOnce(() -> closeShotValve() , this))
+        .unless(() ->!m_IsArmed);
+       // return Commands.race(Commands.waitSeconds(CannonConstants.kSHOOT_DURATION),
+               // Commands.startEnd(() -> openShotValve(), () -> closeShotValve() , this)) 
+               // .unless(() ->!m_IsArmed);
     }
 
     private void openArmingValve() {
@@ -144,6 +148,7 @@ public class Cannon extends SubsystemBase {
     }
     public Command cmdLoadedness() {
         return Commands.runOnce(()->setLoaded(), this)
+            .unless(() -> m_IsLoaded)
             .ignoringDisable(true);
     }
 
@@ -154,7 +159,7 @@ public class Cannon extends SubsystemBase {
               (interrupeted) -> closeArmingValve(),
                () -> isCannonArmed(),
                 this)
-                .withTimeout(10)
+                .withTimeout(2)
                 .unless(() -> !m_IsLoaded);
     }
 }

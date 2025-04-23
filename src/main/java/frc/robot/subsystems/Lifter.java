@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CannonConstants;
 
@@ -20,11 +22,24 @@ m_motor = new WPI_TalonSRX(CannonConstants.kLIFTERMOTORPORT);
   }
 
 public void AimLifter(double Speed){
-  m_motor.set(Speed*CannonConstants.kLIFTERSPEED);
+  m_motor.set(Speed);
 }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public Command cmdBarrelUp() {
+   final double lifterSpeed = CannonConstants.kLIFTERSPEED;
+    return  Commands.run(() -> AimLifter(lifterSpeed), this);
+  }
+
+  public Command cmdBarrelDown() {
+    final double lifterSpeed = -CannonConstants.kLIFTERSPEED;
+     return  Commands.run(() -> AimLifter(lifterSpeed), this);
+   }
+   public Command cmdStopBarrel() {
+    return Commands.runOnce(() -> AimLifter(0), this);
+   }
 }

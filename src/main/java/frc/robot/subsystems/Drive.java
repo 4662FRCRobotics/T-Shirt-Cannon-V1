@@ -44,7 +44,8 @@ public class Drive extends SubsystemBase {
   }
     public void arcadeDrive(double velocity, double heading){
       //double dDriveInvert = -1; //NTU We need to add a muipiter, if we want to flip around the drivices.
-      m_differentialdrive.arcadeDrive(velocity, heading);
+      double throttle = 0.50 ;
+      m_differentialdrive.arcadeDrive(velocity * throttle, heading * throttle);
     }
   @Override
   public void periodic() {

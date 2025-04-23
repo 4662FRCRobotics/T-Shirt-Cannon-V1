@@ -46,9 +46,9 @@ public class RobotContainer {
             () -> m_Drive.arcadeDrive(m_driverController.getLeftY(), -m_driverController.getRightX()),
             m_Drive));
 
-    m_lifter.setDefaultCommand(
-        Commands.run(
-            () -> m_lifter.AimLifter(m_driverController.getRightY()), m_lifter));
+   // m_lifter.setDefaultCommand(
+       // Commands.run(
+           // () -> m_lifter.AimLifter(m_driverController.getRightY()), m_lifter));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -80,8 +80,16 @@ public class RobotContainer {
     m_loadingTrigger
       .onTrue(m_cannon.cmdLoadedness())
       .debounce(3);
-      }
+      
 
+    m_driverController.povUp()
+      .whileTrue(m_lifter.cmdBarrelUp())
+      .onFalse(m_lifter.cmdStopBarrel());
+
+    m_driverController.povDown()
+      .whileTrue(m_lifter.cmdBarrelDown())
+      .onFalse(m_lifter.cmdStopBarrel());
+     }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
