@@ -5,17 +5,17 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class CommandGamepadX extends CommandGenericHID {
+public class CommandGamepadD extends CommandGenericHID {
 
-    private final GamepadX m_hid;
+    private final GamepadD m_hid;
 
-    public CommandGamepadX(int port) {
+    public CommandGamepadD(int port) {
         super(port);
-        m_hid = new GamepadX(port);
+        m_hid = new GamepadD(port);
     }
 
     // @Override
-    public GamepadX getHID() {
+    public GamepadD getHID() {
         return m_hid;
     }
 
@@ -35,13 +35,13 @@ public class CommandGamepadX extends CommandGenericHID {
         return m_hid.getRightY();
     }
 
-    public double getLeftTigger() {
+  /*   public double getLeftTigger() {
         return m_hid.getLeftTrigger();
     }
 
     public double getRightTrigger() {
         return m_hid.getRightTrigger();
-    }
+    }*/
 
     public Trigger LB() {
         return LB(CommandScheduler.getInstance().getDefaultButtonLoop());

@@ -5,22 +5,22 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-public class GamepadX extends GenericHID {
+public class GamepadD extends GenericHID {
   /** Creates a new Gamepad. */
   public static final byte kLeftHorizontalAxis = 0;
   public static final byte kLeftVerticalAxis = 1;
-  public static final byte kLeftTriggerAxis = 2;
-  public static final byte kRightTriggerAxis = 3;
-  public static final byte kRightHorizontalAxis = 4;
-  public static final byte kRightVerticalAxis = 5;
+  //public static final byte kLeftTriggerAxis = 2;
+  //public static final byte kRightTriggerAxis = 3;
+  public static final byte kRightHorizontalAxis = 2;
+  public static final byte kRightVerticalAxis = 3;
 
   public enum AxisType {
     kLeftX(0),
     kLeftY(1),
-    kLeftTrigger(2),
-    KRightTrigger(3),
-    kRightX(4),
-    KRightY(5);
+   // kLeftTrigger(2),
+    //KRightTrigger(3),
+    kRightX(2),
+    KRightY(3);
 
     public final int value;
 
@@ -62,7 +62,7 @@ public class GamepadX extends GenericHID {
 
   private final byte[] m_axes = new byte[AxisType.values().length];
 
-  public GamepadX(final int port) {
+  public GamepadD(final int port) {
     super(port);
     //HAL.report(tResourceType.kResourceType_l, port + 1); no gamepad
 
@@ -70,8 +70,8 @@ public class GamepadX extends GenericHID {
     m_axes[AxisType.kLeftY.value] = kLeftVerticalAxis;
     m_axes[AxisType.kRightX.value] = kRightHorizontalAxis;
     m_axes[AxisType.KRightY.value] = kRightVerticalAxis;
-    m_axes[AxisType.kLeftTrigger.value] = kLeftTriggerAxis;
-    m_axes[AxisType.KRightTrigger.value] = kRightTriggerAxis;
+   // m_axes[AxisType.kLeftTrigger.value] = kLeftTriggerAxis;
+   // m_axes[AxisType.KRightTrigger.value] = kRightTriggerAxis;
   }
 
   public final double getLeftX() {
@@ -82,12 +82,12 @@ public class GamepadX extends GenericHID {
     return getRawAxis(m_axes[AxisType.kLeftY.value]);
   }
 
-  public final double getLeftTrigger() {
-    return getRawAxis(m_axes[AxisType.kLeftTrigger.value]);
-  }
-  public final double getRightTrigger() {
-    return getRawAxis(m_axes[AxisType.KRightTrigger.value]);
-  }
+  //public final double getLeftTrigger() {
+ //   return getRawAxis(m_axes[AxisType.kLeftTrigger.value]);
+ // }
+ // public final double getRightTrigger() {
+  //  return getRawAxis(m_axes[AxisType.KRightTrigger.value]);
+  //}
   public final double getRightX() {
     return getRawAxis(m_axes[AxisType.kRightX.value]);
   }

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.CannonConstants;
 //import frc.robot.commands.ArcadeDrive;
 //import frc.robot.commands.Shoot;
-import frc.robot.libraries.CommandGamepadX;
+import frc.robot.libraries.CommandGamepadD;
 import frc.robot.subsystems.Cannon;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Lifter;
@@ -31,7 +31,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive m_Drive = new Drive();
   private final Lifter m_lifter = new Lifter();
-  private final CommandGamepadX m_driverController = new CommandGamepadX(0);
+  private final CommandGamepadD m_driverController = new CommandGamepadD(0);
   private final Cannon m_cannon = new Cannon();
   private final DigitalInput m_loadingButton = new DigitalInput(0);
   private final Trigger m_loadingTrigger = new Trigger(m_loadingButton::get);

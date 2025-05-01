@@ -25,7 +25,7 @@ public class Cannon extends SubsystemBase {
 
     private enum LEDColor {
         LED_GREEN(0,0,255),
-        LED_YELLOW(255,0,255),
+        LED_YELLOW(255,0,100),
         LED_RED(255,0,0);
 
         private final int m_LED_RED;
