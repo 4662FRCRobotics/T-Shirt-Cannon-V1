@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 //import edu.wpi.first.wpilibj.DoubleSolenoid;
 //import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,6 +52,25 @@ public class Cannon extends SubsystemBase {
         }
     }
 
+    private class VenuePressure{
+    
+        public String m_name;
+        public int m_shotPressure;
+    
+        public VenuePressure(String name, int shotPressure) {
+            this.m_name = name;
+            this.m_shotPressure = shotPressure;
+        }
+        public String getName() {
+            return m_name;
+        }
+
+        public int getShotPressure() {
+            return m_shotPressure;
+        }
+    }    
+
+
     private WPI_TalonSRX m_activator;
     private WPI_TalonSRX m_ArmingValve;
     //private Timer m_timer = new Timer();
@@ -63,6 +83,11 @@ public class Cannon extends SubsystemBase {
     private final AddressableLEDBuffer m_cannonLEDBuffer;
     private LEDColor m_LEDNowColor;
 
+    private SendableChooser<VenuePressure> m_SendableVenue;
+    private VenuePressure[] m_VenueList = {new VenuePressure("Gym", 35),
+            new VenuePressure("Field", 50)};
+    private VenuePressure m_selectedVenue;
+        
     public Cannon() {
         m_activator = new WPI_TalonSRX(CannonConstants.kCANNON_SHOOT_PORT);
         m_ArmingValve = new WPI_TalonSRX(CannonConstants.kCANNON_ARMING_PORT);
@@ -75,6 +100,13 @@ public class Cannon extends SubsystemBase {
         m_cannonLED.setLength(m_cannonLEDBuffer.getLength());
         m_cannonLED.start();
         m_LEDNowColor = LEDColor.LED_GREEN;
+
+        m_SendableVenue = new SendableChooser<VenuePressure>();
+        m_SendableVenue.setDefaultOption(m_VenueList[0].getName(), m_VenueList[0]);
+        for (VenuePressure venue : m_VenueList) {
+            m_SendableVenue.addOption(venue.getName(), venue);
+        }
+        SmartDashboard.putData("Venue", m_SendableVenue);
     }
 
    /*  public void Open() {
@@ -88,6 +120,8 @@ public class Cannon extends SubsystemBase {
        /*  if (m_timer.hasElapsed(CannonConstants.kSHOOT_DURATION)) {
             m_activator.set(0);
         }*/
+        m_selectedVenue = m_SendableVenue.getSelected();
+        m_ShotTankPSITarget = m_selectedVenue.getShotPressure();
         m_ShotTankPSI = 250*(m_ShotTankPressure.getVoltage()/5)-25;
         SmartDashboard.putNumber("Shot Tank Pressure", m_ShotTankPSI);
         SmartDashboard.putNumber("Shot Tank Target Pressure", m_ShotTankPSITarget);
